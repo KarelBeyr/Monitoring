@@ -1,0 +1,34 @@
+groups:
+- name: esp32_stoupacka
+  rules:
+  - alert: Esp32NotCommunicating
+    expr: time()-max_over_time(esp32_stoupacka_timestamp[4h]) > 3600
+    for: 30m
+    labels:
+      severity: page
+    annotations:
+      summary: ESP32 in stoupacka is not communicating. Please perform hardware reset. Or did wifi settings change?
+
+  - alert: Esp32Sensor1Flooded
+    expr: esp32_stoupacka_floodingsensor1 > 0
+    for: 30m
+    labels:
+      severity: page
+    annotations:
+      summary: ESP32 sensor1 flood alert
+
+  - alert: Esp32Sensor2Flooded
+    expr: esp32_stoupacka_floodingsensor2 > 0
+    for: 30m
+    labels:
+      severity: page
+    annotations:
+      summary: ESP32 sensor2 flood alert
+
+  - alert: Esp32Sensor3Flooded
+    expr: esp32_stoupacka_floodingsensor3 > 0
+    for: 3m
+    labels:
+      severity: page
+    annotations:
+      summary: ESP32 sensor3 flood alert

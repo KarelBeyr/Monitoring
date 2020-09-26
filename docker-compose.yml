@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  prometheus:
+    container_name: prometheus-container
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/configs/:/etc/prometheus/
+      - /mnt/synology/prometheus:/prometheus
+    restart: always
+    command:
+      --'storage.tsdb.path=/prometheus'
+      --'config.file=/etc/prometheus/prometheus.yml'
+      --'storage.tsdb.retention.time=90d'
+
+  pushgateway:
+    container_name: pushgateway-container
+    ports:
+      - "9091:9091"
+    image: prom/pushgateway
+    environment:
+      - "TZ=Europe/Prague"
+
+  alertmanager:
+    container_name: alertmanager-container
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./prometheus/configs/alertmanager.yml:/alertmanager.yml
+    image: prom/alertmanager
+    command:
+      --'config.file=/alertmanager.yml'
+
+  grafana:
+    container_name: grafana-container
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    image: grafana/grafana-arm32v7-linux

@@ -1,0 +1,51 @@
+# my global config
+global:
+  scrape_interval:     60s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 60s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - 192.168.113.244:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - '/etc/prometheus/esp32_stoupacka_rules.yml'
+  - '/etc/prometheus/general_rules.yml'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+  - job_name: 'RPi4'
+    static_configs:
+    - targets: ['192.168.113.244:9100']
+
+  - job_name: 'PushGate'
+    static_configs:
+    - targets: ['192.168.113.244:9091']
+
+  - job_name: 'TestCazvJournals'
+    static_configs:
+    - targets: ['test.vedeckecasopisy.cz:80']
+
+  - job_name: 'CazvJournals'
+    scheme: https
+    static_configs:
+    - targets: ['www.agriculturejournals.cz:443']
+
+  - job_name: 'Patria'
+    scrape_interval: 5m
+    static_configs:
+    - targets: ['192.168.113.244:9009']
