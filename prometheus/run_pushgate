@@ -1,6 +1,9 @@
 #!/bin/bash
 
+docker stop pushgate
+docker rm pushgate
+
 docker run -d --restart always \
- --name pushgate-container \
+ --name pushgate \
  -p 9091:9091 \
  prom/pushgateway

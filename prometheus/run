@@ -1,8 +1,13 @@
 #!/bin/bash
 
+docker stop prometheus
+docker rm prometheus
+docker stop pushgate
+docker rm pushgate
+
 docker run -d --restart always \
  -p 9090:9090 \
- --name=prometheus-container \
+ --name=prometheus \
  -v ${PWD}/configs/:/etc/prometheus/ \
  -v /mnt/synology/prometheus:/prometheus \
  prom/prometheus \
@@ -12,6 +17,6 @@ docker run -d --restart always \
 
 docker run -d --restart always \
  -e TZ=Europe/Prague \
- --name pushgate-container \
+ --name pushgate \
  -p 9091:9091 \
  prom/pushgateway
